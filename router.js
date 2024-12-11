@@ -23,12 +23,10 @@ const Router = {
   validateCallable(callable) { if (!(callable instanceof Function)) { this.throw('Cannot add route handler, a Callable (function) is expected');}},
 
   toJSON(data){return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);},
-
   routeExists(method, path) {return this.routes[method].hasOwnProperty(path);},
-  
   throw(message) { Logger.log(`❌ ${message}`); throw new Error(message);}
 };
 
-function doGet(request){ return Router.open("GET", "/"+request.pathInfo, request) }
-function doPost(request){ return Router.open("POST", "/"+request.pathInfo, request) }
+function doGet(req){ return Router.open("GET", "/"+ (req.pathInfo ? req.pathInfo : "") , req) }
+function doPost(req){ return Router.open("POST", "/"+ (req.pathInfo ? req.pathInfo : ""), req) }
 
