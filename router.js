@@ -1,7 +1,6 @@
 const Router = {
 
-  routes: { GET: {}, POST: {} }, // type Route = 
-
+  routes: { GET: {}, POST: {}}, 
   get(path, callable) {this.add("GET", path, callable);},
   post(path, callable) {this.add("POST", path, callable);},
   add(method="GET", path, callable) {
@@ -12,7 +11,6 @@ const Router = {
   },
 
   matchRoute(requestPath, routes){
-
     const requestSegments = requestPath.split("/")
     for ([routePath, callable] of Object.entries(routes)){
         const params = {}
@@ -28,13 +26,15 @@ const Router = {
   },
 
   open(method = "GET", path = "",  request = {}, json=true) {
-
+    //Fallback to user ?query=/foo/bar in case normal url isn't working
+    if (request.parameter.query) { path = request.parameter.query}
     try {
        route = this.matchRoute(path, this.routes[method])
+       console.log(`Route Found ${JSON.stringify(route)}`)
        if (!route) {this.throw(`NOT FOUND ${method} ${path}`);}
        request.params = route.params
+       if(request.postData) {request.json = JSON.parse(request.postData.contents)}
        result = route.callable(request);
-
     } catch(error){
        return this.toJSON({"error": error.toString() }) 
     }
@@ -43,9 +43,7 @@ const Router = {
   validateMethod(method) { if (!["POST", "GET"].includes(method)) {this.throw(`Unsupported Method ${method}`);}},
   validatePath(path){ if (!path[0]=="/") {this.throw(`Route ${path} should start with /`); }},
   validateCallable(callable) { if (!(callable instanceof Function)) { this.throw('Cannot add route handler, a Callable (function) is expected');}},
-
   toJSON(data){return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);},
-  
   throw(message) { Logger.log(`❌ ${message}`); throw new Error(message);}
 };
 
