@@ -1,10 +1,11 @@
 # Google Apps Scripts Router for doGet / doPost 
 
 Dead simple router to handle Web Request to Google Docs
+Works even for anonymous users with fallback ?query=/foo/bar
 
 ## Examples
 
-**Simple Get **
+**Simple Get**
 
 ```
 Router.get("/", ()=> {
@@ -26,7 +27,7 @@ Router.get("/bars/:id", (req)=> {
 })
 ```
 
-**Simple Echo Post **
+**Simple Echo Post**
 
 ```
 Router.post("/bars", (request) => {
