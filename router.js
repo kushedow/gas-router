@@ -1,3 +1,5 @@
+// GAS Router by @kushedow https://github.com/kushedow/gas-router/tree/main
+
 const Router = {
 
   routes: { GET: {}, POST: {}}, 
@@ -18,7 +20,7 @@ const Router = {
         const routeSegments = routePath.split("/")
         if (requestSegments.length !== routeSegments.length){continue}  
         for (const [index, oneRouteSegment] of routeSegments.entries()) {
-           if (oneRouteSegment[0] == ":") { params[oneRouteSegment] = requestSegments[index]; continue; }
+           if (oneRouteSegment[0] == ":") { params[oneRouteSegment.slice(1)] = requestSegments[index]; continue; }
            if (oneRouteSegment !== requestSegments[index]){ match = false }
         }
         if (match) {return {path: routePath, callable: callable, params: params}}
